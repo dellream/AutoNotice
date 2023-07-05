@@ -1,3 +1,5 @@
 auth_data.py
 test.py
 result.txt
+.idea
+__pycache__

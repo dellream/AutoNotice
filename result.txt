@@ -1,0 +1,2 @@
+   * Кожевникова: Рабочее задание 10914784 (https://jira.softwarecom.ru/browse/ASV2021-2310)
+   * Коньковский: Рабочее задание 11024100 (https://jira.softwarecom.ru/browse/ASV2021-2317)

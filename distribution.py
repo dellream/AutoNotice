@@ -41,19 +41,21 @@ def check_result_and_send_email():
     """Проверяет, пустой файл или нет, если нет, то добавляет заголовок и отправляем письмо"""
     sender_email = "AutoNotice.Amtelsoft@yandex.ru"
     sender_password = yandex_password
+    # Список адресов получателей
     recipient_email = [
         "A.Yakimov@amtelsoft.ru",
-        'V.Kozhevnikova@amtelsoft.ru',
-        'S.Konkovskii@amtelsoft.ru',
-        'Aleksandra.Kochubei@softwarecom.ru',
-        'Olga.Popova@softwarecom.ru',
-        'Aleksandr.Pushkin@softwarecom.ru',
-        'nataly.bakaeva@softwarecom.ru',
-        'Vadim.Taranovsky@softwarecom.ru',
-    ]  # Список адресов получателей
+        # 'V.Kozhevnikova@amtelsoft.ru',
+        # 'S.Konkovskii@amtelsoft.ru',
+        # 'Aleksandra.Kochubei@softwarecom.ru',
+        # 'Olga.Popova@softwarecom.ru',
+        # 'Aleksandr.Pushkin@softwarecom.ru',
+        # 'nataly.bakaeva@softwarecom.ru',
+        # 'Vadim.Taranovsky@softwarecom.ru',
+        # 'Anastasiya.Korotkova@softwarecom.ru'
+    ]
 
     cc_emails = [
-        'k.Ignatiev@softwarecom.ru',
+        # 'k.Ignatiev@softwarecom.ru',
     ]
 
     subject = "Уведомление о статусах рабочих задач"

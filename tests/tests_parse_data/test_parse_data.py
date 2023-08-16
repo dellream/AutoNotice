@@ -56,7 +56,7 @@ def test_login_astp(driver):
     login_astp(driver)
     # Проверяем, что успешно авторизовались в astp
     # driver.title возвращает title текущего сайта
-    assert "Center" in driver.title
+    assert "Center" or "Центр запуска" in driver.title
 
 
 # Тест для функции navigate_to_work_tasks

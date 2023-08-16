@@ -44,18 +44,19 @@ def check_result_and_send_email():
     # Список адресов получателей
     recipient_email = [
         "A.Yakimov@amtelsoft.ru",
-        # 'V.Kozhevnikova@amtelsoft.ru',
-        # 'S.Konkovskii@amtelsoft.ru',
-        # 'Aleksandra.Kochubei@softwarecom.ru',
-        # 'Olga.Popova@softwarecom.ru',
-        # 'Aleksandr.Pushkin@softwarecom.ru',
-        # 'nataly.bakaeva@softwarecom.ru',
-        # 'Vadim.Taranovsky@softwarecom.ru',
-        # 'Anastasiya.Korotkova@softwarecom.ru'
+        'V.Kozhevnikova@amtelsoft.ru',
+        'S.Konkovskii@amtelsoft.ru',
+        'Aleksandra.Kochubei@softwarecom.ru',
+        'Olga.Popova@softwarecom.ru',
+        'Aleksandr.Pushkin@softwarecom.ru',
+        'nataly.bakaeva@softwarecom.ru',
+        'Vadim.Taranovsky@softwarecom.ru',
+        'Anastasiya.Korotkova@softwarecom.ru',
+        'Timur.Ibragimov@softwarecom.ru'
     ]
 
     cc_emails = [
-        # 'k.Ignatiev@softwarecom.ru',
+        'k.Ignatiev@softwarecom.ru',
     ]
 
     subject = "Уведомление о статусах рабочих задач"

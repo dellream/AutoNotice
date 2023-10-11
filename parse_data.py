@@ -220,7 +220,7 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
         toggle_element.click()
         time.sleep(5)
 
-    # print(result_dict)
+    print(result_dict)
     return result_dict
 
 
@@ -269,7 +269,10 @@ def webscrapper():
         'пушкин',
         'ибрагимов',
         'маркушин',
-        'чуракова'
+        'чуракова',
+        'вольнова',
+        'обух',
+        'цветков'
     ]
 
     try:

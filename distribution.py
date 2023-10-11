@@ -49,16 +49,18 @@ def check_result_and_send_email():
         'Aleksandra.Kochubei@softwarecom.ru',
         'Olga.Popova@softwarecom.ru',
         'Aleksandr.Pushkin@softwarecom.ru',
-        'nataly.bakaeva@softwarecom.ru',
-        'Vadim.Taranovsky@softwarecom.ru',
-        'Anastasiya.Korotkova@softwarecom.ru',
+        # 'nataly.bakaeva@softwarecom.ru',
+        # 'Vadim.Taranovsky@softwarecom.ru',
         'Timur.Ibragimov@softwarecom.ru',
         'Markushin.Andrey@software.com',
-        'Tatyana.Churakova@softwarecom.ru'
+        'Tatyana.Churakova@softwarecom.ru',
+        'aleksandr.tsvetkov@softwarecom.ru',
+        'A.Obukh@amtelsoft.ru',
+        'Valentina.Volnove@softwarecom.ru'
     ]
 
     cc_emails = [
-        'k.Ignatiev@softwarecom.ru',
+        # 'k.Ignatiev@softwarecom.ru',
     ]
 
     subject = "Уведомление о статусах рабочих задач"

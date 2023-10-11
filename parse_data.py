@@ -4,8 +4,8 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
-from selenium.common import NoSuchElementException
-from selenium.webdriver import Keys
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
@@ -267,8 +267,9 @@ def webscrapper():
         'тарановский',
         'иванова',
         'пушкин',
-        'короткова',
-        'Ибрагимов'
+        'ибрагимов',
+        'маркушин',
+        'чуракова'
     ]
 
     try:

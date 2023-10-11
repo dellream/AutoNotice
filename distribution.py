@@ -52,7 +52,9 @@ def check_result_and_send_email():
         'nataly.bakaeva@softwarecom.ru',
         'Vadim.Taranovsky@softwarecom.ru',
         'Anastasiya.Korotkova@softwarecom.ru',
-        'Timur.Ibragimov@softwarecom.ru'
+        'Timur.Ibragimov@softwarecom.ru',
+        'Markushin.Andrey@software.com',
+        'Tatyana.Churakova@softwarecom.ru'
     ]
 
     cc_emails = [

@@ -56,7 +56,7 @@ def check_result_and_send_email():
         'Tatyana.Churakova@softwarecom.ru',
         'aleksandr.tsvetkov@softwarecom.ru',
         'A.Obukh@amtelsoft.ru',
-        'Valentina.Volnove@softwarecom.ru'
+        'Valentina.Volnova@softwarecom.ru'
     ]
 
     cc_emails = [

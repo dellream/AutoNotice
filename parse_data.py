@@ -4,7 +4,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
@@ -114,7 +114,9 @@ def search_astp_tasks(driver, cleaned_task_title_list):
 
     inputRZ.clear()  # Очищаем поле ввода
     inputRZ.send_keys(', '.join(cleaned_task_title_list))
-    # print(', '.join(cleaned_task_title_list))
+
+    # Вывод всех рабочих заданий в консоль
+    print(', '.join(cleaned_task_title_list))
 
     # Запоминаем количество рабочих задач после ввода списка рз до нажатия поиска
     previous_value = driver.find_element(By.ID, "m6a7dfd2f-lb3").text
@@ -172,10 +174,11 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
     """Парсинг задач из АСТП"""
 
     result_dict = {}
-    chunk_count = (len(tasks_list) + 20) // 20
+    chunk_count = ((len(tasks_list) + 20) // 20)
+    # print(chunk_count)
     current_row_index = 0  # Инициализация переменной для хранения текущего номера строки
 
-    for iteration in range(chunk_count):
+    for iteration in range(chunk_count - 1):
         # Считываем страницу в каждой итерации (при переключении страниц)
         astp_page_source = driver.page_source
         astp_soup = BeautifulSoup(astp_page_source, "lxml")
@@ -197,8 +200,7 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
                 cell_second_name_text = cell_second_name.get_text()
                 cell_task_number_text = cell_task_number.get_text()
                 result_dict[cell_task_number_text] = [cell_second_name_text, cell_status_text]
-            else:
-                print('Подходящих РЗ не найдено')
+                # print(result_dict)
 
         # Форматируем данные для вывода
         for task_number, values in result_dict.items():
@@ -210,15 +212,19 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
 
         current_row_index = len(astp_soup.select('tr.tablerow')) - 1  # Обновляем значение индекса последней строки
 
+        # Ожидание исчезновения элемента "wait"
+        wait = WebDriverWait(driver, 10)
+        wait.until(expected_conditions.invisibility_of_element_located((By.ID, 'wait')))
         # Проверяем, есть ли другие страницы с РЗ
         try:
             toggle_element = driver.find_element(By.ID, 'm6a7dfd2f-ti7_img')  # Попытка обновить ссылку на элемент
-        except NoSuchElementException:
+            if toggle_element.is_displayed() and toggle_element.is_enabled():
+                toggle_element.click()
+                time.sleep(5)
+            else:
+                break
+        except (ElementClickInterceptedException, NoSuchElementException):
             break
-
-        # Переключаемся на следующую страницу, если есть
-        toggle_element.click()
-        time.sleep(5)
 
     print(result_dict)
     return result_dict
@@ -277,7 +283,7 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)

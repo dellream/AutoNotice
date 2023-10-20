@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from pprint import pprint
 
 from bs4 import BeautifulSoup
 
@@ -14,6 +15,7 @@ from selenium.webdriver.support import expected_conditions
 from auth_data import jira_password, astp_password
 
 # URLS
+# Фильтр 'Все дочерние (исполнитель - 2 линия) задачи "РЗ 2023"'
 jira_url = "https://jira.softwarecom.ru/login.jsp?os_destination=%2Fissues%2F%3Ffilter%3D34214"
 astp_url = "http://10.103.0.106/maximo/webclient/login/login.jsp"
 
@@ -62,7 +64,8 @@ def parse_jira_tasks(driver):
 
     # Формируем словарь
     tasks_dict = {title: task.text for title, task in zip(cleaned_task_title_list, all_tasks_jira)}
-    print(tasks_dict)
+    pprint(f'Словарь задач в JIRA: {tasks_dict}')
+    print('Длина сформированного словаря задач в JIRA:', len(tasks_dict))
     return tasks_dict
 
 
@@ -84,6 +87,11 @@ def login_astp(driver):
     astp_password_input.send_keys(astp_password)
     # Нажимаем клавишу ENTER для входа
     astp_password_input.send_keys(Keys.ENTER)
+    WebDriverWait(driver, 180).until(
+        expected_conditions.visibility_of_element_located(
+            (By.ID, "m7f8f3e49_ns_menu_WO_MODULE_a")
+        )
+    )
     # time.sleep(1)
 
 
@@ -116,7 +124,7 @@ def search_astp_tasks(driver, cleaned_task_title_list):
     inputRZ.send_keys(', '.join(cleaned_task_title_list))
 
     # Вывод всех рабочих заданий в консоль
-    print(', '.join(cleaned_task_title_list))
+    pprint(', '.join(cleaned_task_title_list))
 
     # Запоминаем количество рабочих задач после ввода списка рз до нажатия поиска
     previous_value = driver.find_element(By.ID, "m6a7dfd2f-lb3").text
@@ -178,18 +186,26 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
     # print(chunk_count)
     current_row_index = 0  # Инициализация переменной для хранения текущего номера строки
 
-    for iteration in range(chunk_count - 1):
+    for iteration in range(1, chunk_count):
+
         # Считываем страницу в каждой итерации (при переключении страниц)
         astp_page_source = driver.page_source
         astp_soup = BeautifulSoup(astp_page_source, "lxml")
 
+        # Запись html для дебага при необходимости
+        # with open(f'astp_page_{iteration}.html', 'w', encoding='utf-8') as file:
+        #     file.write(astp_page_source)
+
         current_row_len = len(astp_soup.select('tr.tablerow')) + current_row_index - 1
 
-        # print('Длина первого атрибута в range: ', current_row_index)
-        # print('Длина второго атрибута в range: ', current_row_len)
+        print(f'Индекс начальной строки на странице #{iteration}: ', current_row_index)
+        print(f'Индекс конечной строки на странице #{iteration}: ', current_row_len)
+
+        error_occurred = False  # Инициализируем флаг ошибки
 
         # Проходим по каждой строке на странице
         for i in range(current_row_index, current_row_len):
+            print(f'Итерация i = {i}')
             row = astp_soup.select('tr.tablerow')[i - current_row_index]
             # Находим ячейки с номером задачи, статусом и фамилией сотрудника
             cell_task_number = row.find('td', id=f'm6a7dfd2f_tdrow_[C:1]-c[R:{i}]')
@@ -200,7 +216,13 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
                 cell_second_name_text = cell_second_name.get_text()
                 cell_task_number_text = cell_task_number.get_text()
                 result_dict[cell_task_number_text] = [cell_second_name_text, cell_status_text]
-                # print(result_dict)
+            else:
+                print(f'\n*** Внимание! *** Данные в итерации {iteration} '
+                      f'не были считаны, произошла ошибка парсинга\n')
+                error_occurred = True
+                break
+        if not error_occurred:
+            print(f'Данные в итерации {iteration} были считаны')
 
         # Форматируем данные для вывода
         for task_number, values in result_dict.items():
@@ -210,23 +232,22 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
                     result_dict[task_number] = [surname.capitalize(), values[1]]
                     break
 
-        current_row_index = len(astp_soup.select('tr.tablerow')) - 1  # Обновляем значение индекса последней строки
+        pprint(f'Промежуточный словарь результатов после итерации {iteration}: {result_dict}')
 
-        # Ожидание исчезновения элемента "wait"
-        wait = WebDriverWait(driver, 10)
-        wait.until(expected_conditions.invisibility_of_element_located((By.ID, 'wait')))
+        current_row_index = current_row_len  # Обновляем значение индекса последней строки
+
+        WebDriverWait(driver, 180).until(
+            expected_conditions.visibility_of_element_located((By.ID, "m6a7dfd2f-ti7_img"))
+        )
+
         # Проверяем, есть ли другие страницы с РЗ
-        try:
+        if iteration != chunk_count - 1:
             toggle_element = driver.find_element(By.ID, 'm6a7dfd2f-ti7_img')  # Попытка обновить ссылку на элемент
-            if toggle_element.is_displayed() and toggle_element.is_enabled():
-                toggle_element.click()
-                time.sleep(5)
-            else:
-                break
-        except (ElementClickInterceptedException, NoSuchElementException):
-            break
+            toggle_element.click()
+            print(f'Кликнули на стрелку пагинации в итерации {iteration}')
+            time.sleep(10)
 
-    print(result_dict)
+    pprint(f'Словарь результатов парсера: {result_dict}')
     return result_dict
 
 

@@ -183,10 +183,10 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
 
     result_dict = {}
     chunk_count = ((len(tasks_list) + 20) // 20)
-    # print(chunk_count)
+    print(chunk_count)
     current_row_index = 0  # Инициализация переменной для хранения текущего номера строки
 
-    for iteration in range(1, chunk_count):
+    for iteration in range(1, chunk_count+1):
 
         # Считываем страницу в каждой итерации (при переключении страниц)
         astp_page_source = driver.page_source
@@ -241,13 +241,15 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
         )
 
         # Проверяем, есть ли другие страницы с РЗ
-        if iteration != chunk_count - 1:
+        if iteration != chunk_count:
             toggle_element = driver.find_element(By.ID, 'm6a7dfd2f-ti7_img')  # Попытка обновить ссылку на элемент
             toggle_element.click()
             print(f'Кликнули на стрелку пагинации в итерации {iteration}')
             time.sleep(10)
+        else:
+            break
 
-    pprint(f'Словарь результатов парсера: {result_dict}')
+    pprint(f'\nСловарь результатов парсера: {result_dict}')
     return result_dict
 
 
@@ -304,7 +306,7 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)
@@ -321,10 +323,10 @@ def webscrapper():
 
         search_astp_tasks(driver, list(tasks_dict.keys()))
         print('5. Рабочие задачи были успешно найдены')
+        time.sleep(5)
 
         result_dict = parse_astp_tasks(driver, employees_second_name, list(tasks_dict.keys()))
         print('6. Сформирован словарь результатов')
-        time.sleep(2)
 
         for key, value in tasks_dict.items():
             if key in result_dict:

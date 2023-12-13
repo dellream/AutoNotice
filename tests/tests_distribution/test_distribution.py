@@ -1,6 +1,6 @@
 import unittest
 from unittest import mock
-from distribution import check_result_and_send_email, send_email
+from outlook_jira_notifications.distribution import check_result_and_send_email, send_email
 
 
 class SendEmailTestCase(unittest.TestCase):

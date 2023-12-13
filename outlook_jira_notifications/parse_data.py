@@ -82,7 +82,7 @@ def login_astp(driver):
     astp_password_input = driver.find_element(By.ID, 'password')
     # Заполняем логин и пароль
     astp_login_input.clear()
-    astp_login_input.send_keys('YAKIMOVAS')
+    astp_login_input.send_keys('SUPPORTASV')
     astp_password_input.clear()
     astp_password_input.send_keys(astp_password)
     # Нажимаем клавишу ENTER для входа
@@ -140,42 +140,6 @@ def search_astp_tasks(driver, cleaned_task_title_list):
     WebDriverWait(driver, 30).until(
         lambda driver: driver.find_element(By.ID, "m6a7dfd2f-lb3").text != previous_value
     )
-
-
-# def parse_astp_tasks(driver, employees_second_name):
-#     """Парсинг задач из АСТП"""
-#
-#     result_dict = {}
-#     # Считываем страницу в каждой итерации (при переключении страниц)
-#     astp_page_source = driver.page_source
-#     astp_soup = BeautifulSoup(astp_page_source, "lxml")
-#
-#     # Проходим по каждой строке на странице
-#     for i in range(len(astp_soup.select('tr.tablerow')) - 1):
-#         row = astp_soup.select('tr.tablerow')[i]
-#         # Находим ячейки с номером задачи, статусом и фамилией сотрудника
-#         cell_task_number = row.find('td', id=f'm6a7dfd2f_tdrow_[C:1]-c[R:{i}]')
-#         cell_status = row.find('td', id=f'm6a7dfd2f_tdrow_[C:11]-c[R:{i}]')
-#         cell_second_name = row.find('td', id=f'm6a7dfd2f_tdrow_[C:21]-c[R:{i}]')
-#         if cell_status is not None:
-#             cell_status_text = cell_status.get_text()
-#             cell_second_name_text = cell_second_name.get_text()
-#             cell_task_number_text = cell_task_number.get_text()
-#             result_dict[cell_task_number_text] = [cell_second_name_text, cell_status_text]
-#         else:
-#             print('Подходящих РЗ не найдено')
-#
-#     # Форматируем данные для вывода
-#     for task_number, values in result_dict.items():
-#         cell_value = values[0]
-#         for surname in employees_second_name:
-#             if surname.lower() in cell_value.lower():
-#                 result_dict[task_number] = [surname.capitalize(), values[1]]
-#                 break
-#
-#     print(result_dict)
-#     print(len(result_dict))
-#     return result_dict
 
 
 def parse_astp_tasks(driver, employees_second_name, tasks_list):
@@ -288,25 +252,24 @@ def timer(func):
 def webscrapper():
     employees_second_name = [
         'якимов',
-        'бакаева',
         'кожевникова',
         'кочубей',
         'попова',
         'коньковский',
-        'тарановский',
-        'иванова',
         'пушкин',
         'ибрагимов',
         'маркушин',
         'чуракова',
         'вольнова',
         'обух',
-        'цветков'
+        'цветков',
+        'грязева',
+        'баранова'
     ]
 
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)

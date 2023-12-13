@@ -1,8 +1,7 @@
-import time
 import unittest
 from unittest.mock import patch
 
-from main import assemblage
+from outlook_jira_notifications.main import assemblage
 
 
 class MainTestCase(unittest.TestCase):

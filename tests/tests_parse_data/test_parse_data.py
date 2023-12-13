@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-from parse_data import login_jira, parse_jira_tasks, login_astp, navigate_to_work_tasks, search_astp_tasks, \
+from outlook_jira_notifications.parse_data import login_jira, parse_jira_tasks, login_astp, navigate_to_work_tasks, search_astp_tasks, \
     parse_astp_tasks, write_result_to_file
 
 

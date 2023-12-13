@@ -1,5 +1,7 @@
-auth_data.py
-result.txt
+outlook_jira_notifications/auth_data.py
+outlook_jira_notifications/result.txt
 .idea
 __pycache__
 .pytest_cache
+chrome_NOUPDATE.reg
+google-chrome-11405735199-64bit-downzen.com.exe

@@ -1,5 +1,5 @@
 outlook_jira_notifications/auth_data.py
-outlook_jira_notifications/result.txt
+outlook_jira_notifications/result.html
 .idea
 __pycache__
 .pytest_cache

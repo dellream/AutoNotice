@@ -16,7 +16,7 @@ def send_email(sender_email, sender_password, recipient_emails, cc_emails, subje
     msg["Subject"] = subject
 
     # Добавление текста сообщения
-    msg.attach(MIMEText(message, "plain"))
+    msg.attach(MIMEText(message, "html"))
 
     try:
         # Установка соединения с SMTP-сервером Яндекса
@@ -49,14 +49,13 @@ def check_result_and_send_email():
         'Aleksandra.Kochubei@softwarecom.ru',
         'Olga.Popova@softwarecom.ru',
         'Aleksandr.Pushkin@softwarecom.ru',
-        # 'nataly.bakaeva@softwarecom.ru',
-        # 'Vadim.Taranovsky@softwarecom.ru',
         'Timur.Ibragimov@softwarecom.ru',
         'Markushin.Andrey@software.com',
         'Tatyana.Churakova@softwarecom.ru',
         'aleksandr.tsvetkov@softwarecom.ru',
         'A.Obukh@amtelsoft.ru',
-        'Valentina.Volnova@softwarecom.ru'
+        'Valentina.Volnova@softwarecom.ru',
+        'Anastasiya.Gryazeva@softwarecom.ru',
     ]
 
     cc_emails = [
@@ -72,7 +71,7 @@ def check_result_and_send_email():
                       "Просьба передать информацию от инициатора на третью линию или наоборот\n\n"
 
     # Чтение данных из файла
-    with open('result.txt', 'r', encoding='utf-8') as file:
+    with open('result.html', 'r', encoding='utf-8') as file:
         message = file.read()
 
     # Проверим, пустой ли файл, если нет, то добавим text_to_prepend сверху

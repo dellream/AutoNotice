@@ -150,7 +150,7 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
     print(chunk_count)
     current_row_index = 0  # Инициализация переменной для хранения текущего номера строки
 
-    for iteration in range(1, chunk_count+1):
+    for iteration in range(1, chunk_count + 1):
 
         # Считываем страницу в каждой итерации (при переключении страниц)
         astp_page_source = driver.page_source
@@ -217,14 +217,74 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
     return result_dict
 
 
-def write_result_to_file(result_dict):
-    """Запись результатов в файл"""
-    with open('result.txt', 'w', encoding='utf-8') as file:
-        for task_number, values in result_dict.items():
-            if 'В работе' in values[1]:
-                file.write(
-                    f'   * {values[0]}: Рабочее задание {task_number} (https://jira.softwarecom.ru/browse/{values[2]})\n')
-            print(f"{task_number}: {values}")
+# def write_in_progress_to_file(result_dict):
+#     """Запись РЗ 'В работе' в файл"""
+#     with open('result.txt', 'w', encoding='utf-8') as file:
+#         # file.write('Рабочие задания "В работе": \n\n')
+#         for task_number, values in result_dict.items():
+#             if 'В работе' or 'Ожидает ответа инициатора' in values[1]:
+#                 file.write(
+#                     f'   * {values[0]}: Рабочее задание {task_number} (https://jira.softwarecom.ru/browse/{values[2]})\n')
+#             print(f"{task_number}: {values}")
+
+
+def format_and_sort_file(result_dict, output_file='result.html'):
+    """Отформатировать и отсортировать файл по фамилиям"""
+    # Разделить строки на два блока: "В работе" и "Ожидает ответа инициатора"
+    in_progress_block = {}
+    pending_block = {}
+
+    for task_number, values in result_dict.items():
+        if 'В работе' in values[1]:
+            surname = values[0]
+            if surname not in in_progress_block:
+                in_progress_block[surname] = []
+            in_progress_block[surname].append(
+                f'Рабочее задание {task_number} '
+                f'(<a href="https://jira.softwarecom.ru/browse/{values[2]}">'
+                f'https://jira.softwarecom.ru/browse/{values[2]}'
+                f'</a>)\n'
+            )
+        elif 'Ожидает ответа инициатора' in values[1]:
+            surname = values[0]
+            if surname not in pending_block:
+                pending_block[surname] = []
+            pending_block[surname].append(
+                f'Рабочее задание {task_number} '
+                f'(<a href="https://jira.softwarecom.ru/browse/{values[2]}">'
+                f'https://jira.softwarecom.ru/browse/{values[2]}'
+                f'</a>)\n'
+            )
+
+    # Отсортировать каждый блок по фамилиям
+    sorted_in_progress_block = sorted(in_progress_block.items(), key=lambda x: x[0])
+    sorted_pending_block = sorted(pending_block.items(), key=lambda x: x[0])
+
+    # Записать отсортированные блоки в новый файл
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write('<html><body>\n')
+
+        file.write('<h3>Рабочие задания "В работе":</h3>\n\n')
+        for surname, tasks in sorted_in_progress_block:
+            file.write(f'<p><b>{surname}:</b></p>\n')
+            file.write('<ul>\n')
+            for task in tasks:
+                file.write(f'  <li>{task}</li>\n')
+            file.write('</ul>\n')
+
+        file.write(
+            '<h3>Рабочие задания "Ожидает ответа инициатора" (внимание, данные РЗ могут быть под заглушками):</h3>\n\n')
+        for surname, tasks in sorted_pending_block:
+            file.write(f'<p><b>{surname}:</b></p>\n')
+            file.write('<ul>\n')
+            for task in tasks:
+                file.write(f'  <li>{task}</li>\n')
+            file.write('</ul>\n')
+
+        file.write('</body></html>')
+
+    print(f'Файл успешно отформатирован и отсортирован. Результат сохранен в {output_file}')
+
 
 
 def timer(func):
@@ -269,7 +329,7 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)
@@ -295,7 +355,7 @@ def webscrapper():
             if key in result_dict:
                 result_dict[key].append(value)
 
-        write_result_to_file(result_dict)
+        format_and_sort_file(result_dict)
 
     except Exception as ex:
         print(ex)

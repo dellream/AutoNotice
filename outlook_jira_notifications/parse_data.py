@@ -5,7 +5,8 @@ from pprint import pprint
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, \
+    StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
@@ -38,21 +39,44 @@ def login_jira(driver):
 
 def parse_jira_tasks(driver):
     """Парсинг задач из JIRA"""
-    jira_page_source = driver.page_source
-    soup = BeautifulSoup(jira_page_source, "lxml")
-    # Ожидаем, пока элементы задач будут видимыми на странице
-    WebDriverWait(driver, 30).until(
-        expected_conditions.visibility_of_element_located(
-            (By.CLASS_NAME, "issue-link-summary")
-        )
-    )
-    # Ищем заголовки и ключи задач
-    all_tasks_title = soup.find_all("span", class_="issue-link-summary")
-    all_tasks_jira = soup.find_all("span", class_="issue-link-key")
 
-    # Обрабатываем заголовки задач и формируем словарь задач
+    all_tasks_title = []
+    all_tasks_jira = []
+
+    while True:
+
+        try:
+            # Ожидаем, пока элементы задач будут видимыми на странице
+            WebDriverWait(driver, 30).until(
+                expected_conditions.visibility_of_element_located(
+                    (By.CLASS_NAME, "issue-link-summary")
+                )
+            )
+
+            # Ищем заголовки и ключи задач на текущей странице
+            current_tasks_title = driver.find_elements(By.CLASS_NAME, "issue-link-summary")
+            current_tasks_jira = driver.find_elements(By.CLASS_NAME, "issue-link-key")
+
+            # Добавляем найденные заголовки и ключи к общему списку
+            all_tasks_title.extend([title.text for title in current_tasks_title])
+            all_tasks_jira.extend([key.text for key in current_tasks_jira])
+
+            # Проверяем наличие элемента пагинации
+            pagination_element = driver.find_elements(By.CLASS_NAME, "nav-next")
+
+            if pagination_element:
+                print("Элемент навигации найден. Кликаем на стрелку пагинации.")
+                # Кликаем на стрелку пагинации
+                pagination_element[0].click()
+            else:
+                # Если элемента пагинации нет, выходим из цикла
+                break
+        except StaleElementReferenceException:
+            print("Элемент пагинации устарел. Повторяем попытку.")
+            continue
+
     # Получаем сырой номер РЗ из заголовка с возможными лишними символами
-    task_title_list = [title.text.split()[0] for title in all_tasks_title]
+    task_title_list = [title.split(' ')[0] for title in all_tasks_title]
 
     # Убираем лишние символы и оставляем только цифры от номера РЗ
     cleaned_task_title_list = []
@@ -61,11 +85,15 @@ def parse_jira_tasks(driver):
         cleaned_title = ''.join(filter(str.isdigit, title))
         if cleaned_title:
             cleaned_task_title_list.append(cleaned_title)
+        else:
+            cleaned_task_title_list.append('В задаче не указан №РЗ')
 
     # Формируем словарь
-    tasks_dict = {title: task.text for title, task in zip(cleaned_task_title_list, all_tasks_jira)}
+    tasks_dict = {title: task for title, task in zip(cleaned_task_title_list, all_tasks_jira)}
+
     pprint(f'Словарь задач в JIRA: {tasks_dict}')
     print('Длина сформированного словаря задач в JIRA:', len(tasks_dict))
+
     return tasks_dict
 
 
@@ -286,7 +314,6 @@ def format_and_sort_file(result_dict, output_file='result.html'):
     print(f'Файл успешно отформатирован и отсортирован. Результат сохранен в {output_file}')
 
 
-
 def timer(func):
     """Декоратор для подсчета времени выполнения"""
 
@@ -329,7 +356,7 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)

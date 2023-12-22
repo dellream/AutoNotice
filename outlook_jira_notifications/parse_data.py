@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions
 from auth_data import jira_password, astp_password
 
 # URLS
-# Фильтр 'Все дочерние (исполнитель - 2 линия) задачи "РЗ 2023"'
+# Фильтр 'Для парсера'
 jira_url = "https://jira.softwarecom.ru/login.jsp?os_destination=%2Fissues%2F%3Ffilter%3D34214"
 astp_url = "http://10.103.0.106/maximo/webclient/login/login.jsp"
 
@@ -356,7 +356,7 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
 
         login_jira(driver)

@@ -44,7 +44,6 @@ def check_result_and_send_email():
     # Список адресов получателей
     recipient_email = [
         "A.Yakimov@amtelsoft.ru",
-        'V.Kozhevnikova@amtelsoft.ru',
         'S.Konkovskii@amtelsoft.ru',
         'Aleksandra.Kochubei@softwarecom.ru',
         'Olga.Popova@softwarecom.ru',

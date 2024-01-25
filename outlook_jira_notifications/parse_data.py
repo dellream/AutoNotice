@@ -245,16 +245,6 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
     return result_dict
 
 
-# def write_in_progress_to_file(result_dict):
-#     """Запись РЗ 'В работе' в файл"""
-#     with open('result.txt', 'w', encoding='utf-8') as file:
-#         # file.write('Рабочие задания "В работе": \n\n')
-#         for task_number, values in result_dict.items():
-#             if 'В работе' or 'Ожидает ответа инициатора' in values[1]:
-#                 file.write(
-#                     f'   * {values[0]}: Рабочее задание {task_number} (https://jira.softwarecom.ru/browse/{values[2]})\n')
-#             print(f"{task_number}: {values}")
-
 
 def format_and_sort_file(result_dict, output_file='result.html'):
     """Отформатировать и отсортировать файл по фамилиям"""
@@ -356,9 +346,8 @@ def webscrapper():
 
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
-
         login_jira(driver)
         print('1. Авторизация в JIRA пройдена успешно')
 

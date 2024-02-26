@@ -44,17 +44,17 @@ def check_result_and_send_email():
     # Список адресов получателей
     recipient_email = [
         "A.Yakimov@amtelsoft.ru",
-        'S.Konkovskii@amtelsoft.ru',
-        'Aleksandra.Kochubei@softwarecom.ru',
-        'Olga.Popova@softwarecom.ru',
-        'Aleksandr.Pushkin@softwarecom.ru',
-        'Timur.Ibragimov@softwarecom.ru',
-        'Markushin.Andrey@software.com',
-        'Tatyana.Churakova@softwarecom.ru',
-        'aleksandr.tsvetkov@softwarecom.ru',
-        'A.Obukh@amtelsoft.ru',
-        'Valentina.Volnova@softwarecom.ru',
-        'Anastasiya.Gryazeva@softwarecom.ru',
+        # 'S.Konkovskii@amtelsoft.ru',
+        # 'Aleksandra.Kochubei@softwarecom.ru',
+        # 'Olga.Popova@softwarecom.ru',
+        # 'Aleksandr.Pushkin@softwarecom.ru',
+        # 'Timur.Ibragimov@softwarecom.ru',
+        # 'Markushin.Andrey@software.com',
+        # 'Tatyana.Churakova@softwarecom.ru',
+        # 'aleksandr.tsvetkov@softwarecom.ru',
+        # 'A.Obukh@amtelsoft.ru',
+        # 'Valentina.Volnova@softwarecom.ru',
+        # 'Anastasiya.Gryazeva@softwarecom.ru',
     ]
 
     cc_emails = [

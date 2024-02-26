@@ -17,7 +17,7 @@ from auth_data import jira_password, astp_password
 
 # URLS
 # Фильтр 'Для парсера'
-jira_url = "https://jira.softwarecom.ru/login.jsp?os_destination=%2Fissues%2F%3Ffilter%3D34214"
+jira_url = "https://jira.softwarecom.ru/login.jsp?os_destination=%2Fissues%2F%3Ffilter%3D34831"
 astp_url = "http://10.103.0.106/maximo/webclient/login/login.jsp"
 
 
@@ -29,7 +29,7 @@ def login_jira(driver):
     jira_password_input = driver.find_element(By.ID, 'login-form-password')
     # Заполняем логин и пароль
     jira_login_input.clear()
-    jira_login_input.send_keys('A.Yakimov')
+    jira_login_input.send_keys('Aleksandra.Kochubei')
     jira_password_input.clear()
     jira_password_input.send_keys(jira_password)
     # Нажимаем клавишу ENTER для входа
@@ -243,7 +243,6 @@ def parse_astp_tasks(driver, employees_second_name, tasks_list):
 
     pprint(f'\nСловарь результатов парсера: {result_dict}')
     return result_dict
-
 
 
 def format_and_sort_file(result_dict, output_file='result.html'):
